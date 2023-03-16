@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    ports:
+      - "8888:8888"
+      - "8000:8000"
+      - "4200:4200"
+    volumes:
+      - ../:/app
+    environment:
+      - PYTHONPATH="$PYTHONPATH:/app/lib"
+
+  mlflowserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow_data:/mlflow
+
+volumes:
+  mlflow_data:
