@@ -24,4 +24,4 @@ RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requ
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
 USER jovyan
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token='MLOPSPROJ'"]
+# CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token='MLOPSPROJ'"]

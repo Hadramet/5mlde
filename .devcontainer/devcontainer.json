@@ -1,11 +1,8 @@
 {
-	"name": "Jupyter Data Science Notebooks (Community)",
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
-	"overrideCommand": false,
-	
-	// Forward Jupyter port locally, mark required
+	"name": "5MLDE (MLOPS) - Group 1 dev space",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "jupyter",
+	"workspaceFolder": "/workspace",
 	"forwardPorts": [8888, 4200, 5000],
 	"portsAttributes": {
 		"8888": {
@@ -35,10 +32,5 @@
 			]
 		}
 	},
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip3 install --user -r requirements.txt",
-
-	// Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "jovyan"
 }
