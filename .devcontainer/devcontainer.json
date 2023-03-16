@@ -3,10 +3,23 @@
     "dockerComposeFile": "docker-compose.yml",
     "service": "jupyter",
     "workspaceFolder": "/app",
+    "forwardPorts": [8888, 5000],
+    "portsAttributes": {
+        "8888": {
+            "label": "Jupyter",
+            "onAutoForward": "notify",
+            "elevateIfNeeded": false
+        },
+        "5000":{
+            "label": "Mlflow",
+            "onAutoForward": "notify",
+            "elevateIfNeeded": false
+        }
+    },
     "customizations": {
         "vscode": {
             "settings": {
-                "terminal.integrated.defaultProfile.linux": "/bin/bash",
+                "terminal.integrated.defaultProfile.linux": "bash",
                 "python.pythonPath": "/opt/conda/bin/python",
                 "python.linting.pylintEnabled": false,
                 "python.linting.enabled": true,
@@ -15,7 +28,7 @@
             },
             "extensions": [
                 "ms-python.python",
-                "ms-toolsai.jupyter"
+                "ms-toolsai.jupyter"                
             ]
         }
     },
