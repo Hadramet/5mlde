@@ -1,7 +1,0 @@
-{
-	"name": "5MLDE (MLOPS) - Group 1 dev space",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "jupyter",
-	"workspaceFolder": "/workspace",
-	"remoteUser": "jovyan"
-}
