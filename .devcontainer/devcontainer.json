@@ -27,9 +27,12 @@
                 "jupyter.allowLocalServer": true
             },
             "extensions": [
-                "ms-python.python",
-                "ms-toolsai.jupyter"                
-            ]
+				"ms-python.python",
+				"ms-toolsai.jupyter",
+				"ms-python.vscode-pylance",
+				"PKief.material-icon-theme",
+				"GitHub.codespaces"
+			]
         }
     },
     "remoteUser": "jovyan"
