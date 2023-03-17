@@ -1,16 +1,17 @@
 import pandas as pd
-from preprocessing import preprocess_data
+from training import  preprocess_data, train_model, batch_inference
 
-# Read the sample dataset
-sample_data = pd.read_csv("sample_data.csv")
+path = "data/spam_emails_1.csv"
 
-# Print the original data
-print("Original data:")
-print(sample_data)
+# test preprocess data
+# result = preprocess_data(path)
 
-# Preprocess the data
-preprocessed_data = preprocess_data(sample_data)
+# print result
+# print(result)
 
-# Print the preprocessed data
-print("\nPreprocessed data:")
-print(preprocessed_data)
+# test model training and evaluation
+train_model(path)
+
+# test batch inference
+result = batch_inference(path)
+print(result)
