@@ -3,7 +3,9 @@ seaborn
 scikit-learn
 pandas
 mlflow
-# gdown
+gdown
+nltk
+textblob
 # great_expectations
 # deployment
 # fastapi
