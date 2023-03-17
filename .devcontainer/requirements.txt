@@ -4,9 +4,11 @@ scikit-learn
 pandas
 mlflow
 gdown
+# text processing
 nltk
 textblob
 # great_expectations
 # deployment
 # fastapi
 # uvicorn
+autopep8
