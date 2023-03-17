@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Set the API URL for the local server
-prefect config set PREFECT_API_URL=http://0.0.0.0:4200/api
+prefect config set PREFECT_API_URL=http://localhost:4200/api
 
 # Start the local Prefect server
-prefect orion start --host 0.0.0.0 &
+prefect orion start --host localhost &
 
 # Wait for a few seconds to ensure the server starts
 sleep 5
