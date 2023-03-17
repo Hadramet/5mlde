@@ -3,7 +3,7 @@
     "dockerComposeFile": "docker-compose.yml",
     "service": "jupyter",
     "workspaceFolder": "/app",
-    "forwardPorts": [8888, 5000],
+    "forwardPorts": [8888, 5000, 4200],
     "portsAttributes": {
         "8888": {
             "label": "Jupyter",
@@ -12,6 +12,11 @@
         },
         "5000":{
             "label": "Mlflow",
+            "onAutoForward": "notify",
+            "elevateIfNeeded": false
+        },
+        "4200":{
+            "label": "Prefect",
             "onAutoForward": "notify",
             "elevateIfNeeded": false
         }
