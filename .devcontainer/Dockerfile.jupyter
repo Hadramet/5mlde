@@ -3,16 +3,16 @@ FROM jupyter/minimal-notebook
 WORKDIR /app
 
 COPY requirements.txt /app/requirements.txt
-COPY setup_prefect.sh /app/setup_prefect.sh
+COPY run_prefect.sh /app/run_prefect.sh
 
 USER root
 RUN apt update && apt install build-essential -y
 RUN chown -R jovyan:users /app
-RUN chmod +x /app/setup_prefect.sh
+RUN chmod +x /app/run_prefect.sh
 
 USER jovyan
 RUN pip install -r requirements.txt
 ENV PYTHONPATH="$PYTHONPATH:/app/lib"
-RUN /app/setup_prefect.sh
+RUN /app/run_prefect.sh
 
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token='MLOPS'"]

@@ -4,7 +4,7 @@
 prefect config set PREFECT_API_URL=http://localhost:4200/api
 
 # Start the local Prefect server
-prefect orion start --host localhost &
+prefect orion start --host 0.0.0.0 &
 
 # Wait for a few seconds to ensure the server starts
 sleep 5
