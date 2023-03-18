@@ -10,7 +10,7 @@ from prefect import task, flow
 
 
 
-@task
+@task(name='compute_target', tags=['preprocessing'])
 def compute_target(
         df : pd.DataFrame,
         label: dict = config.LABEL
@@ -20,7 +20,7 @@ def compute_target(
     df['target'] = df['label'].map(label)
     return df
 
-@task
+@task(name='drop_columns', tags=['preprocessing'])
 def drop_columns(
         df : pd.DataFrame,
         column_to_drop: list = config.COLUMN_TO_DROP
@@ -30,7 +30,7 @@ def drop_columns(
     df = df.drop(columns=column_to_drop)
     return df
 
-@task
+@task(name='preprocess_text', tags=['preprocessing'])
 def preprocess_text(df: pd.DataFrame) -> pd.DataFrame:
     """  
     Preprocess text column 
@@ -53,7 +53,7 @@ def preprocess_text(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-@task
+@task(name='extract_x_y', tags=['preprocessing'])
 def extract_x_y(
         df: pd.DataFrame,
         tv_dict: Optional[dict] = None,
@@ -77,7 +77,7 @@ def extract_x_y(
         y = df['target']
     return {'X': X, 'y': y, 'tv': tv}
 
-@flow
+@flow(name="Data processing", retries=1, retry_delay_seconds=30)
 def preprocess_data(
         path: str, 
         tv_dict: Optional[dict] = None, 
