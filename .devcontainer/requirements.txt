@@ -8,6 +8,7 @@ gdown
 nltk
 textblob
 great_expectations
+prefect-great-expectations
 # deployment
 # fastapi
 # uvicorn
