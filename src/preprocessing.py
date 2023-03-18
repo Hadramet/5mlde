@@ -1,7 +1,7 @@
 import config
 import pandas as pd
 import nltk
-from typing import Optional
+from typing import Optional,Any
 from textblob import Word
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -57,15 +57,25 @@ def preprocess_text(df: pd.DataFrame) -> pd.DataFrame:
 def extract_x_y(
         df: pd.DataFrame,
         tv_dict: Optional[dict] = None,
-        with_target: bool = True
+        with_target: bool = True,
+        **kwargs
 ) -> dict:
     """Extract X and y from dataframe"""
 
+    max_features = kwargs.get('max_features', 1000)
+    lowercase = kwargs.get('lowercase', True)
+    analyzer = kwargs.get('analyzer', 'word')
+    stop_words = kwargs.get('stop_words', 'english')
+    ngram_range = kwargs.get('ngram_range', (1, 1))
+
     if tv_dict is None:
-        tv = TfidfVectorizer(max_features=1000,
-                             lowercase=True,
-                             analyzer='word',
-                             stop_words='english', ngram_range=(1, 1))
+        tv = TfidfVectorizer(
+            max_features=max_features,
+            lowercase=lowercase,
+            analyzer=analyzer,
+            stop_words=stop_words,
+            ngram_range=ngram_range
+        )
         tv.fit(df['text'])
     else:
         tv = tv_dict["vectorizer"]
@@ -81,18 +91,21 @@ def extract_x_y(
 def preprocess_data(
         path: str, 
         tv_dict: Optional[dict] = None, 
-        with_target: bool = True
+        with_target: bool = True,
+        kwargs: Optional[dict] = None
 ) -> dict:
     """ Preprocess data """
 
     nltk.download('stopwords')
     nltk.download('wordnet')
+
     df = pd.read_csv(path)
+    
     if with_target:
         df = compute_target(df)
         df = drop_columns(df)
         df = preprocess_text(df)
-        return extract_x_y(df, tv_dict, with_target)
+        return extract_x_y(df, tv_dict, with_target, **kwargs)
     else:
         df = preprocess_text(df)
-        return extract_x_y(df, tv_dict, with_target)
+        return extract_x_y(df, tv_dict, with_target, **kwargs)
