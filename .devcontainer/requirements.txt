@@ -1,4 +1,4 @@
-prefect
+prefect[ge]
 seaborn
 scikit-learn
 pandas

@@ -9,6 +9,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from scipy.sparse import csr_matrix
 from prefect import task, flow
+from prefect_great_expectations import run_checkpoint_validation
 
 
 @task(name='model_training', tags=['model'])
@@ -61,8 +62,7 @@ def train_model(data_path: str,
 ) -> None:
     """ Train model and save model and text vectorizer """
 
-    from utils import download_data
-    download_data()
+    
     
     extract_data = preprocess_data(data_path)
     X = extract_data['X']
@@ -95,6 +95,16 @@ def batch_inference(input_path: str, tv=None, model=None) :
     return model_predict(data['X'], model)
 
 
+
+
+@flow(name="Data validation")
+def great_expection_validation(checkpoint_name: str):
+    from utils import download_data
+    download_data()
+    run_checkpoint_validation(checkpoint_name=checkpoint_name)
+
+
 if __name__ == '__main__':
+    great_expection_validation("gx_checkpoint")
     train_model(config.DATA_PATH)
     inference = batch_inference(config.DATA_PATH)
