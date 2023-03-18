@@ -6,7 +6,6 @@ from textblob import Word
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 from prefect import task, flow
-from pydantic import BaseModel, BaseConfig
 
 
 
