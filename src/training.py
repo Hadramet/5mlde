@@ -86,5 +86,13 @@ def batch_inference(input_path: str, tv=None, model=None) :
     if model is None:
         model = load_pickle(config.MODEL_PATH)['model']
 
-    data = preprocess_data(input_path, tv, False)
+    tv_dict = {'vectorizer': tv}
+    data = preprocess_data(input_path,tv_dict , False)
     return model_predict(data['X'], model)
+
+
+if __name__ == '__main__':
+    from utils import download_data
+    download_data()
+    train_model(config.DATA_PATH)
+    inference = batch_inference(config.DATA_PATH)

@@ -14,3 +14,5 @@ TV_PATH = os.path.join(TV_FOLDER, 'tv.pkl')
 
 COLUMN_TO_DROP = ['Unnamed: 0', "label", "label_num"]
 LABEL = {'ham': 0, 'spam': 1}
+
+DATA_URL = "https://drive.google.com/file/d/1wtogytIpZC74Tq6s1GWaPWY3VBhmOrJy/view?usp=sharing"

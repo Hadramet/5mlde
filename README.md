@@ -20,6 +20,16 @@ These instructions will help you set up the development environment for Jupyter 
 3. Click the "Reopen in Container" option in the bottom-left corner of the window. If you don't see the option, press `F1` and type "Remote-Containers: Reopen in Container" in the command palette.This will launch the Jupyter and MLflow containers using the Docker Compose configuration.
 4. Once the containers are up and running, you can access the Jupyter notebook at `http://localhost:8888` and the MLflow server at `http://localhost:5000`.
 
+### Running prefect server
+
+1. Set the API URL for the local server
+```bash
+prefect config set PREFECT_API_URL=http://0.0.0.0:4200/api
+```
+2. Start the local Prefect server
+```bash
+prefect orion start --host 0.0.0.0 
+```
 
 ## License
 

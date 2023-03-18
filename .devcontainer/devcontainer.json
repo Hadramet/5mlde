@@ -12,13 +12,14 @@
         },
         "5000":{
             "label": "Mlflow",
-            "onAutoForward": "notify",
+            "onAutoForward": "openBrowser",
             "elevateIfNeeded": false
         },
         "4200":{
             "label": "Prefect",
-            "onAutoForward": "notify",
-            "elevateIfNeeded": false
+            "elevateIfNeeded": false,
+            "onAutoForward": "openBrowser"
+            
         }
     },
     "customizations": {

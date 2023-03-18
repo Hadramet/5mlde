@@ -1,10 +1,17 @@
 import config
 import pandas as pd
 import nltk
+from typing import Optional
 from textblob import Word
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
+from prefect import task, flow
+from pydantic import BaseModel, BaseConfig
 
+
+
+
+@task
 def compute_target(
         df : pd.DataFrame,
         label: dict = config.LABEL
@@ -14,6 +21,7 @@ def compute_target(
     df['target'] = df['label'].map(label)
     return df
 
+@task
 def drop_columns(
         df : pd.DataFrame,
         column_to_drop: list = config.COLUMN_TO_DROP
@@ -23,6 +31,7 @@ def drop_columns(
     df = df.drop(columns=column_to_drop)
     return df
 
+@task
 def preprocess_text(df: pd.DataFrame) -> pd.DataFrame:
     """  
     Preprocess text column 
@@ -45,29 +54,34 @@ def preprocess_text(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+@task
 def extract_x_y(
-        df : pd.DataFrame,
-        tv: TfidfVectorizer = None,
+        df: pd.DataFrame,
+        tv_dict: Optional[dict] = None,
         with_target: bool = True
 ) -> dict:
-    """ Extract X and y from dataframe """
+    """Extract X and y from dataframe"""
 
-    if tv is None:
+    if tv_dict is None:
         tv = TfidfVectorizer(max_features=1000,
                              lowercase=True,
                              analyzer='word',
-                             stop_words= 'english',ngram_range=(1,1))
+                             stop_words='english', ngram_range=(1, 1))
         tv.fit(df['text'])
-    X = tv.transform(df['text'])    
+    else:
+        tv = tv_dict["vectorizer"]
+
+    X = tv.transform(df['text'])
     y = None
 
     if with_target:
         y = df['target']
     return {'X': X, 'y': y, 'tv': tv}
 
+@flow
 def preprocess_data(
         path: str, 
-        tv: TfidfVectorizer = None, 
+        tv_dict: Optional[dict] = None, 
         with_target: bool = True
 ) -> dict:
     """ Preprocess data """
@@ -79,7 +93,7 @@ def preprocess_data(
         df = compute_target(df)
         df = drop_columns(df)
         df = preprocess_text(df)
-        return extract_x_y(df, tv, with_target)
+        return extract_x_y(df, tv_dict, with_target)
     else:
         df = preprocess_text(df)
-        return extract_x_y(df, tv, with_target)
+        return extract_x_y(df, tv_dict, with_target)
