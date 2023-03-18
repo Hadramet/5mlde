@@ -7,7 +7,7 @@ gdown
 # text processing
 nltk
 textblob
-# great_expectations
+great_expectations
 # deployment
 # fastapi
 # uvicorn
