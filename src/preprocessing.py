@@ -77,7 +77,7 @@ def extract_x_y(
         y = df['target']
     return {'X': X, 'y': y, 'tv': tv}
 
-@flow(name="Data processing", retries=1, retry_delay_seconds=30)
+@flow(name="Data processing")
 def preprocess_data(
         path: str, 
         tv_dict: Optional[dict] = None, 

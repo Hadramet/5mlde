@@ -46,3 +46,6 @@ if __name__ == '__main__':
     data_validation_every_10_minutes.apply()
     model_deployement_every_friday.apply()
     inference_deployement_every_10_minutes.apply()
+
+
+# 1 - prefect deployment build src/deployement.py:train_model  -n log-simple -q test

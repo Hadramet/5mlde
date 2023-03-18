@@ -11,7 +11,7 @@ def start_orion_server():
     set_api_url_cmd = f"prefect config set PREFECT_API_URL={ORION_SERVER_URL}/api"
     subprocess.run(set_api_url_cmd, shell=True, check=True)
 
-    start_server_cmd = "prefect orion start --host 0.0.0.0"
+    start_server_cmd = "prefect server start --host 0.0.0.0"
     subprocess.run(start_server_cmd, shell=True, check=True)
     
 

@@ -1,8 +1,8 @@
 import os
 import config
-from helpers import load_pickle, save_pickle, task_load_pickle, task_save_pickle
+from utils import download_data
+from helpers import task_load_pickle, task_save_pickle
 from preprocessing import preprocess_data
-
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
@@ -99,7 +99,6 @@ def batch_inference(input_path: str, tv=None, model=None) :
 
 @flow(name="Data validation")
 def great_expection_validation(checkpoint_name: str):
-    from utils import download_data
     download_data()
     run_checkpoint_validation(checkpoint_name=checkpoint_name)
 
