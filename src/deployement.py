@@ -1,7 +1,7 @@
 import config
 from training import train_model
 from training import batch_inference
-from training import great_expection_validation
+from training import data_validation
 
 from prefect.deployments import Deployment
 from prefect.orion.schemas.schedules import (
@@ -11,10 +11,11 @@ from prefect.orion.schemas.schedules import (
 
 data_validation_every_10_minutes = Deployment.build_from_flow(
     name="Data validation - Deployment",
-    flow=great_expection_validation,
+    flow=data_validation,
     version='1.0.0',
     tags=['data'],
-    schedule=IntervalSchedule(interval= 10 * 60),
+    work_pool_name="5mlde",
+    schedule=IntervalSchedule(interval=1 * 60),
     parameters={
         "checkpoint_name": "gx_checkpoint",
     }
@@ -25,7 +26,8 @@ model_deployement_every_friday = Deployment.build_from_flow(
     flow=train_model,
     version='1.0.0',
     tags=['model'],
-    schedule=CronSchedule(cron="0 0 * * FRI"),
+    work_pool_name="5mlde",
+    schedule=IntervalSchedule(interval=2 * 60),
     parameters={
         "data_path": config.DATA_PATH,
     }
@@ -36,7 +38,8 @@ inference_deployement_every_10_minutes = Deployment.build_from_flow(
     flow=batch_inference,
     version='1.0.0',
     tags=['inference'],
-    schedule=IntervalSchedule(interval= 20 * 60),
+    work_pool_name="5mlde",
+    schedule=IntervalSchedule(interval=3 * 60),
     parameters={
         "input_path": config.DATA_PATH,
     }
@@ -47,5 +50,3 @@ if __name__ == '__main__':
     model_deployement_every_friday.apply()
     inference_deployement_every_10_minutes.apply()
 
-
-# 1 - prefect deployment build src/deployement.py:train_model  -n log-simple -q test

@@ -98,12 +98,12 @@ def batch_inference(input_path: str, tv=None, model=None) :
 
 
 @flow(name="Data validation")
-def great_expection_validation(checkpoint_name: str):
+def data_validation(checkpoint_name: str):
     download_data()
     run_checkpoint_validation(checkpoint_name=checkpoint_name)
 
 
 if __name__ == '__main__':
-    great_expection_validation("gx_checkpoint")
+    data_validation("gx_checkpoint")
     train_model(config.DATA_PATH)
     inference = batch_inference(config.DATA_PATH)
