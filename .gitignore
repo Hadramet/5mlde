@@ -136,6 +136,7 @@ data/
 src/data
 src/mlruns
 mlflow/
+!src/mlflow
 mlruns
 mlartifacts
 mlflow.db
