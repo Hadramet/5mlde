@@ -1,6 +1,6 @@
 FROM jupyter/minimal-notebook
 
-WORKDIR /app
+WORKDIR /app 
 
 COPY requirements.txt /app/requirements.txt
 

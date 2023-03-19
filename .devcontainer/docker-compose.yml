@@ -9,19 +9,14 @@ services:
       - "8888:8888"
       - "8000:8000"
       - "4200:4200"
+      - "5000:5000"
     volumes:
       - ../:/app
     environment:
       - PYTHONPATH="$PYTHONPATH:/app/lib"
+    networks:
+      - 5mlde
 
-  mlflowserver:
-    build:
-      context: .
-      dockerfile: Dockerfile.mlflow
-    ports:
-      - "5000:5000"
-    volumes:
-      - mlflow_data:/mlflow
+networks:
+  5mlde:
 
-volumes:
-  mlflow_data:
