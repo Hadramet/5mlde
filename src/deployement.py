@@ -16,7 +16,7 @@ data_validation_every_10_minutes = Deployment.build_from_flow(
     tags=['data'],
     work_pool_name="5mlde",
     parameters={
-        "checkpoint_name": "gx_checkpoint",
+        "checkpoint_name": "email_checkpoint",
     }
 )
 

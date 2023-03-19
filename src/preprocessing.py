@@ -62,6 +62,7 @@ def extract_x_y(
 ) -> dict:
     """Extract X and y from dataframe"""
 
+    kwargs = kwargs or {}
     max_features = kwargs.get('max_features', 1000)
     lowercase = kwargs.get('lowercase', True)
     analyzer = kwargs.get('analyzer', 'word')
@@ -92,7 +93,7 @@ def preprocess_data(
         path: str, 
         tv_dict: Optional[dict] = None, 
         with_target: bool = True,
-        kwargs: Optional[dict] = None
+        kwargs: Optional[dict] = {}
 ) -> dict:
     """ Preprocess data """
 

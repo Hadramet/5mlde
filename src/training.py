@@ -80,7 +80,7 @@ def train_model(data_path: str,
     args = parser.parse_args()
 
     mlflow.set_tracking_uri(config.MLFLOW_TRACKING_URI)
-    mlflow.set_experiment(config.MLFLOW_EXPERIMENT_NAME_1)
+    mlflow.set_experiment(f'email_spam')
 
     with mlflow.start_run() as run:
         run_id = run.info.run_id
@@ -141,6 +141,6 @@ def data_validation(checkpoint_name: str):
 
 
 if __name__ == '__main__':
-    data_validation("gx_checkpoint")
+    data_validation("email_checkpoint")
     train_model(config.DATA_PATH)
     inference = batch_inference(config.DATA_PATH)

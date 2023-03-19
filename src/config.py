@@ -1,6 +1,6 @@
 import os
 
-BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '.'))
 
 DATA_FOLDER = os.path.join(BASE_PATH, 'data')
 DATA_PATH = os.path.join(DATA_FOLDER, 'spam_emails_1.csv')
