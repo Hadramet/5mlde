@@ -1,0 +1,19 @@
+version: "3.9"
+name: "5mlde-v1"
+services:
+  training:
+      build: training
+      ports:
+        - "4200:4200"
+      volumes:
+        - models:/mlflow
+      
+  mlflow:
+      build: mlflow
+      ports:
+        - "5000:5000"
+      volumes:
+        - models:/mlflow
+
+volumes:
+  models:

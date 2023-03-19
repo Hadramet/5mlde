@@ -14,7 +14,6 @@ data_validation_every_10_minutes = Deployment.build_from_flow(
     flow=data_validation,
     version='1.0.0',
     tags=['data'],
-    work_pool_name="5mlde",
     parameters={
         "checkpoint_name": "email_checkpoint",
     }
@@ -25,7 +24,6 @@ model_deployement_every_friday = Deployment.build_from_flow(
     flow=train_model,
     version='1.0.0',
     tags=['model'],
-    work_pool_name="5mlde",
     parameters={
         "data_path": config.DATA_PATH,
     }
@@ -36,7 +34,6 @@ inference_deployement_every_10_minutes = Deployment.build_from_flow(
     flow=batch_inference,
     version='1.0.0',
     tags=['inference'],
-    work_pool_name="5mlde",
     parameters={
         "input_path": config.DATA_PATH,
     }

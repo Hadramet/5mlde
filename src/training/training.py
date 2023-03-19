@@ -79,8 +79,8 @@ def train_model(data_path: str,
     parser.add_argument('--ngram_range', type=tuple, default=(1, 1))
     args = parser.parse_args()
 
-    mlflow.set_tracking_uri(config.MLFLOW_TRACKING_URI)
-    mlflow.set_experiment(f'email_spam')
+    # mlflow.set_tracking_uri(config.MLFLOW_TRACKING_URI)
+    # mlflow.set_experiment(f'email_spam')
 
     with mlflow.start_run() as run:
         run_id = run.info.run_id
@@ -139,6 +139,8 @@ def data_validation(checkpoint_name: str):
     download_data()
     run_checkpoint_validation(checkpoint_name=checkpoint_name)
 
+
+mlflow.set_experiment(f'Email Spam')
 
 if __name__ == '__main__':
     data_validation("email_checkpoint")
