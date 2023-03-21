@@ -1,51 +1,57 @@
 import config
 import pandas as pd
 import nltk
-from typing import Optional,Any
-from textblob import Word
+import os
+
+from utils import save_pickle
+from config import TV_PATH
 from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import TfidfVectorizer
+from textblob import Word
 from prefect import task, flow
+from sklearn.preprocessing import LabelEncoder
 
 
+@task(name='save_label_encoder', tags=['preprocessing'])
+def save_label_encoder(
+    encoder : LabelEncoder,
+    path: str
+) -> None:
+    """
+    Save label encoder
+    Args:
+        encoder (LabelEncoder): label encoder
+        path (str): path to save the label encoder
+    """
+    save_pickle(path, encoder)
 
-
-@task(name='compute_target', tags=['preprocessing'])
-def compute_target(
-        df : pd.DataFrame,
-        label: dict = config.LABEL
-) -> pd.DataFrame:
-    """ Compute target column from label column """
-
-    df['target'] = df['label'].map(label)
-    return df
 
 @task(name='drop_columns', tags=['preprocessing'])
 def drop_columns(
         df : pd.DataFrame,
         column_to_drop: list = config.COLUMN_TO_DROP
 ) -> pd.DataFrame:
-    """ Drop columns """
-
-    df = df.drop(columns=column_to_drop)
+    """
+    Drop columns from the dataframe
+    """
+    df.drop(columns=column_to_drop, inplace=True)
     return df
+
+
 
 @task(name='preprocess_text', tags=['preprocessing'])
 def preprocess_text(df: pd.DataFrame) -> pd.DataFrame:
-    """  
-    Preprocess text column 
-    1. Remove punctuation
-    2. Lowercase
-    3. Remove stopwords
-    4. Lemmatize
     """
-
+    Preprocess text data
+    Args:
+        df (pd.DataFrame): dataframe containing text data
+    Returns:
+        pd.DataFrame: preprocessed dataframe
+    """
     df['text'] = df['text'].astype(str)
-    df['text'] = df['text'].str.replace('[^\w\s]','')
+    df['text'] = df['text'].str.replace(r'[^\w\s]', '')
     df['text'] = df['text'].str.lower()
     stop = stopwords.words('english')
     df['text'] = df['text'].apply(lambda x: " ".join(x for x in x.split() if x not in stop))
-
     freq = pd.Series(' '.join(df['text']).split()).value_counts()[-10:]
     freq = list(freq.index)
     df['text'] = df['text'].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
@@ -53,60 +59,54 @@ def preprocess_text(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+
 @task(name='extract_x_y', tags=['preprocessing'])
 def extract_x_y(
         df: pd.DataFrame,
-        tv_dict: Optional[dict] = None,
         with_target: bool = True,
-        **kwargs
 ) -> dict:
-    """Extract X and y from dataframe"""
-
-    kwargs = kwargs or {}
-    max_features = kwargs.get('max_features', 1000)
-    lowercase = kwargs.get('lowercase', True)
-    analyzer = kwargs.get('analyzer', 'word')
-    stop_words = kwargs.get('stop_words', 'english')
-    ngram_range = kwargs.get('ngram_range', (1, 1))
-
-    if tv_dict is None:
-        tv = TfidfVectorizer(
-            max_features=max_features,
-            lowercase=lowercase,
-            analyzer=analyzer,
-            stop_words=stop_words,
-            ngram_range=ngram_range
-        )
-        tv.fit(df['text'])
-    else:
-        tv = tv_dict["vectorizer"]
-
-    X = tv.transform(df['text'])
-    y = None
-
+    """
+    Extract X and y from dataframe
+    Args:
+        df (pd.DataFrame): dataframe containing text data
+        with_target (bool): whether to extract target or not
+    Returns:
+        dict: dictionary containing X and y
+    """
     if with_target:
-        y = df['target']
-    return {'X': X, 'y': y, 'tv': tv}
+        X = df['text']
+        y = df['label']
+    else:
+        X = df['text']
+        y = None
+
+    return {'X': X, 'y': y }
+
 
 @flow(name="Data processing")
 def preprocess_data(
         path: str, 
-        tv_dict: Optional[dict] = None, 
         with_target: bool = True,
-        kwargs: Optional[dict] = {}
 ) -> dict:
-    """ Preprocess data """
+    """
+    Preprocess data
+    Args:
+        path (str): path to the data
+        with_target (bool): whether to extract target or not
+    Returns:
+        dict: dictionary containing X and y
+    """
 
     nltk.download('stopwords')
     nltk.download('wordnet')
-
     df = pd.read_csv(path)
+    df = drop_columns(df)
+    df = preprocess_text(df)
     
-    if with_target:
-        df = compute_target(df)
-        df = drop_columns(df)
-        df = preprocess_text(df)
-        return extract_x_y(df, tv_dict, with_target, **kwargs)
-    else:
-        df = preprocess_text(df)
-        return extract_x_y(df, tv_dict, with_target, **kwargs)
+    if with_target: 
+        label_encoder = LabelEncoder()
+        label_encoder.fit(df['label'])
+        df['label'] = label_encoder.transform(df['label'])
+        save_label_encoder(label_encoder,TV_PATH)
+
+    return extract_x_y(df,with_target)
