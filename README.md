@@ -1,4 +1,4 @@
-# 5mlde
+# 5MLDE - Group 1 - Spam Email classification
 
 This repo contains the group work done as part of the 5MLDE course at Supinfo School. It is about deploying machine learning models on different platforms.
 
@@ -29,10 +29,32 @@ These instructions will help you set up the development environment for Jupyter 
 ### Setting up the production environment
 
 1. Navigate to the `src` folder.
-2. Run `docker-compose up`. This will build the infrastructure and create two containers: `training` for running Prefect deployment orchestration and `mlflow` for the model registry.
+2. Run `docker-compose up -d`. This will build the infrastructure and create two containers: `training` for running Prefect deployment orchestration and `mlflow` for the model registry.
+3. Run `docker-compose down --volumes` to stop the containers and remove the volumes.
 
+
+## Orchestrating the training pipeline
+
+You can use Prefect to orchestrate the training pipeline. The Prefect server is available at http://localhost:4200.
+
+Navigate to deployement menu
+
+[![Deployement menu](./assets/deployments.png)](./assets/deployments.png)
+
+You can see the list of deployments, and run a new one. We reommend starting with the `DataValidation` deployment. This will first download the data, then validate it. If the validation fails, the deployment will stop.
+
+## Mlflow tracking
+
+We use MLflow to track the training of our models. The MLflow server is available at http://localhost:5000. Email spam  is the only experiments we have trained so far. You can see the list of runs, and the metrics and parameters associated with each run.
+
+[![MLflow tracking](./assets/mlflow.png)](./assets/mlflow.png)
+
+### Staging in production
+
+TODO
 
 For both environments, you can access the prefec UI at http://localhost:4200 and the mlflow UI at http://localhost:5000.
+
 
 
 ## License
