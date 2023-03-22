@@ -1,0 +1,11 @@
+prefect[ge]
+seaborn
+scikit-learn
+pandas
+mlflow
+gdown
+great_expectations
+prefect-great-expectations
+nltk
+textblob
+autopep8

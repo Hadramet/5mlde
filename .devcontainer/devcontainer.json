@@ -1,0 +1,49 @@
+{
+    "name": "5MLDE Dev environment v1",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "jupyter",
+    "workspaceFolder": "/app",
+    "forwardPorts": [8888, 5000, 4200],
+    "portsAttributes": {
+        "8888": {
+            "label": "Jupyter",
+            "onAutoForward": "notify",
+            "elevateIfNeeded": false
+        },
+        "5000":{
+            "label": "Mlflow",
+            "onAutoForward": "openBrowser",
+            "elevateIfNeeded": false
+        },
+        "4200":{
+            "label": "Prefect",
+            "elevateIfNeeded": false,
+            "onAutoForward": "openBrowser"
+            
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "python.pythonPath": "/opt/conda/bin/python",
+                "python.linting.pylintEnabled": false,
+                "python.linting.enabled": true,
+                "jupyter.notebookFileRoot": "/app/lab",
+                "jupyter.allowLocalServer": true
+            },
+            "extensions": [
+				"ms-python.python",
+				"ms-toolsai.jupyter",
+				"ms-python.vscode-pylance",
+				"PKief.material-icon-theme",
+				"GitHub.codespaces",
+				"ms-toolsai.jupyter-renderers",
+				"ms-toolsai.vscode-jupyter-cell-tags",
+				"ms-toolsai.jupyter-keymap",
+				"ms-toolsai.vscode-jupyter-slideshow"
+			]
+        }
+    },
+    "remoteUser": "jovyan"
+}

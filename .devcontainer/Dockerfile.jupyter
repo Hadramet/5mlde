@@ -1,0 +1,15 @@
+FROM jupyter/minimal-notebook
+
+WORKDIR /app 
+
+COPY requirements.txt /app/requirements.txt
+
+USER root
+RUN apt update && apt install build-essential -y
+RUN usermod -aG sudo jovyan
+
+USER jovyan
+RUN pip install -r requirements.txt
+ENV PYTHONPATH="$PYTHONPATH:/app/lib"
+
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token='MLOPS'"]

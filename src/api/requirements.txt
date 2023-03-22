@@ -1,0 +1,6 @@
+fastapi[all]
+scikit-learn
+pandas
+mlflow
+nltk
+textblob

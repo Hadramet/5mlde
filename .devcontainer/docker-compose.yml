@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    ports:
+      - "8888:8888"
+      - "8000:8000"
+      - "4200:4200"
+      - "5000:5000"
+    volumes:
+      - ../:/app
+    environment:
+      - PYTHONPATH="$PYTHONPATH:/app/lib"
+    networks:
+      - 5mlde
+
+networks:
+  5mlde:
+

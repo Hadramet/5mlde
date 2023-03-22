@@ -32,7 +32,6 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
-
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -54,6 +53,8 @@ coverage.xml
 # Translations
 *.mo
 *.pot
+
+models/
 
 # Django stuff:
 *.log
@@ -127,3 +128,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+results/
+training_data/
+data/
+src/data
+src/mlruns
+mlflow/
+!src/mlflow
+mlruns
+mlartifacts
+mlflow.db
