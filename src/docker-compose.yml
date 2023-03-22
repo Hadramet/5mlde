@@ -7,18 +7,22 @@ services:
       - 8086:8086
     volumes:
       - models:/mlflow
+    depends_on:
+      - mlflow
   training:
       build: training
       ports:
         - "4200:4200"
       volumes:
-        - models:/mlflow      
+        - models:/mlflow
   mlflow:
       build: mlflow
       ports:
         - "5000:5000"
       volumes:
         - models:/mlflow
+      depends_on:
+        - training
 
 volumes:
   models:

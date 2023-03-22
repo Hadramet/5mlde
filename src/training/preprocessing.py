@@ -1,12 +1,10 @@
 import config
 import pandas as pd
-import nltk
-import os
 
 from core import preprocessing
-
 from helpers import save_pickle
 from config import TV_PATH
+
 from prefect import task, flow
 from sklearn.preprocessing import LabelEncoder
 
@@ -18,9 +16,10 @@ def save_label_encoder( encoder : LabelEncoder, path: str) -> None:
 
 
 @task(name='drop_columns', tags=['preprocessing'])
-def drop_columns(df : pd.DataFrame,
-                 column_to_drop: list = config.COLUMN_TO_DROP) -> pd.DataFrame:
-    return preprocessing.drop_columns_core(df, column_to_drop)
+def drop_columns(
+    df : pd.DataFrame,
+    column_to_drop: list = config.COLUMN_TO_DROP) -> pd.DataFrame:
+    return preprocessing.drop_columns(df, column_to_drop)
 
 
 @task(name='preprocess_text', tags=['preprocessing'])

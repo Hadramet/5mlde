@@ -37,6 +37,8 @@ def preprocess_text(df: pd.DataFrame) -> pd.DataFrame:
     df['text'] = df['text'].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
     df['text'] = df['text'].apply(lambda x: " ".join([Word(word).lemmatize() for word in x.split()]))
 
+    return df
+
 
 def extract_x_y(
         df: pd.DataFrame,

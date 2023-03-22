@@ -6,10 +6,7 @@ mlflow
 gdown
 great_expectations
 prefect-great-expectations
-# text processing
 nltk
 textblob
-# deployment
-# fastapi
-# uvicorn
 autopep8
+pytest

@@ -6,8 +6,6 @@ mlflow
 gdown
 great_expectations
 prefect-great-expectations
-# text processing
 nltk
 textblob
-# deployment
 autopep8
