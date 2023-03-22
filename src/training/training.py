@@ -2,12 +2,12 @@ import os
 import config
 import mlflow
 import numpy as np
-import argparse
 
 from utils import download_data
 from helpers import task_load_pickle, task_save_pickle
 from preprocessing import preprocess_data
 
+from typing import Optional, Tuple
 from scipy.sparse import csr_matrix
 from prefect import task, flow
 from prefect_great_expectations import run_checkpoint_validation
@@ -131,9 +131,14 @@ def model_training_and_evaluation(
 @flow(name='Model Training')
 def train_model(
     data_path: str, 
-    local_storage: str = config.OUTPUT_FOLDER,
-    save_model: bool = True, 
-    **kwargs
+    local_storage: Optional[str] = config.OUTPUT_FOLDER,
+    save_model: Optional[bool] = True, 
+    max_features : Optional[int] = 3000,
+    ngram_range : Optional[Tuple[int, int]] = (1, 2),
+    use_idf : Optional[bool] = True,
+    alpha : Optional[float] = 0.01,
+    analyser : Optional[str] = 'word',
+    stop_words : Optional[str] = 'english'
 ) -> None:
     """ 
     Train model and save model and text vectorizer
@@ -146,6 +151,15 @@ def train_model(
     Returns:
         None
     """
+
+    kwargs = {
+        'max_features': max_features,
+        'ngram_range': ngram_range,
+        'use_idf': use_idf,
+        'alpha': alpha,
+        'analyser': analyser,
+        'stop_words': stop_words
+    }
 
     with mlflow.start_run() as run:
         run_id = run.info.run_id
@@ -181,9 +195,9 @@ def train_model(
 
 
 @flow(name='Batch Inference')
-def batch_inference(input_path: str, tv=None, model=None) :
+def batch_inference(input_path: str) :
     """ Batch inference """
-    if model is None: model = task_load_pickle(config.MODEL_PATH)
+    model = task_load_pickle(config.MODEL_PATH)
     data = preprocess_data(input_path, False)
     return model_predict(data['X'], model)
 

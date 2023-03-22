@@ -13,19 +13,6 @@ def save_pickle(path: str, obj: dict):
     with open(path, 'wb') as f:
         pickle.dump(obj, f)
 
-
-@task(retries=3, retry_delay_seconds=60)
-def failure():
-    print('running')
-    if random.randint(1, 10) % 2 == 0:
-        raise ValueError("This number is not even")
-
-
-@flow()
-def test_failure():
-    failure()
-
-
 @task(name="Load", tags=['Serialize'])
 def task_load_pickle(path: str):
     with open(path, 'rb') as f:

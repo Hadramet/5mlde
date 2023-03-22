@@ -12,7 +12,14 @@ MODEL_PATH = os.path.join(MODEL_FOLDER, 'model.pkl')
 TV_FOLDER = os.path.join(OUTPUT_FOLDER, 'tv')
 TV_PATH = os.path.join(TV_FOLDER, 'tv.pkl')
 
-COLUMN_TO_DROP = ['Unnamed: 0', "label", "label_num"]
+def init_folders():
+    os.makedirs(DATA_FOLDER, exist_ok=True)
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+    os.makedirs(MODEL_FOLDER, exist_ok=True)
+    os.makedirs(TV_FOLDER, exist_ok=True)
+
+
+COLUMN_TO_DROP = ['Unnamed: 0',"label_num"]
 LABEL = {'ham': 0, 'spam': 1}
 
 DATA_URL = "https://drive.google.com/file/d/1wtogytIpZC74Tq6s1GWaPWY3VBhmOrJy/view?usp=sharing"

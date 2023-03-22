@@ -25,7 +25,6 @@ class ClassificationOut(BaseModel):
   email: str 
   test : Any
 
-pipeline = mlflow.pyfunc.load_model(model_uri="models:/email_spam/Production")
 
 def extact_features(processed_text: str, tv_dict: Optional[dict] = {}) -> dict:
     """
@@ -55,44 +54,37 @@ def extact_features(processed_text: str, tv_dict: Optional[dict] = {}) -> dict:
     
     return {"features" : features , "processed_text" : processed_text}
 
-def process_text(payload: dict, tv_dict: Optional[dict] = {}) -> dict:
+def preprocess_text_base(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Takes a payload with a text field
-    outputs a dictionary with the processed text.
-    example payload:
-        {'text': "Hi, I am a spam email"}
+    Preprocess text data
+    Args:
+        df (pd.DataFrame): dataframe containing text data
+    Returns:
+        pd.DataFrame: preprocessed dataframe
     """
-    text = payload['text']
-    processed_text = text.lower()
-    processed_text = processed_text.replace('[^\w\s]','')
+    df['text'] = df['text'].astype(str)
+    df['text'] = df['text'].str.replace(r'[^\w\s]', '')
+    df['text'] = df['text'].str.lower()
     stop = stopwords.words('english')
-    processed_text = " ".join(x for x in processed_text.split() if x not in stop)
-    freq = pd.Series(' '.join(processed_text).split()).value_counts()[-10:]
+    df['text'] = df['text'].apply(lambda x: " ".join(x for x in x.split() if x not in stop))
+    freq = pd.Series(' '.join(df['text']).split()).value_counts()[-10:]
     freq = list(freq.index)
-    processed_text = " ".join(x for x in processed_text.split() if x not in freq)
-    processed_text = " ".join([Word(word).lemmatize() for word in processed_text.split()])
-    features = extact_features(processed_text, tv_dict)
-    return  features
+    df['text'] = df['text'].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
+    df['text'] = df['text'].apply(lambda x: " ".join([Word(word).lemmatize() for word in x.split()]))
 
+    return df
 
-def run_inference(payload: dict,
-                  pipeline: Pipeline) -> dict :
-    """
-    Takes a pre-fitted pipeline (tfidf + naive bayes model)
-    outputs the computed label.
-    example payload:
-        {'text': "Hi, I am a spam email"}
-    """
-    features = process_text(payload)
-    return features
 
 @app.get("/latest/")
 def latest_model():
-    return {"health_check" : "OK","run_id": pipeline._model_meta.run_id}
+  pipeline = mlflow.pyfunc.load_model(model_uri="models:/email_spam_model/Production")
+  return {"health_check" : "OK","run_id": pipeline._model_meta.run_id}
 
 @app.post("/classify", response_model=ClassificationOut, status_code=201)
 def classify(payload: InputData):
-    label = run_inference(payload.dict(), pipeline)
-    features = label["features"]
-    predicted = pipeline.predict(features)
-    return ClassificationOut(label=0, email=payload.text, test=predicted)
+  pipeline = mlflow.pyfunc.load_model(model_uri="models:/email_spam_model/Production")
+  email_content = pd.Series(payload.text)
+  payload_df = pd.DataFrame({'text': email_content})
+  pre_processed = preprocess_text_base(payload_df)
+  predicted = pipeline.predict(pre_processed)
+  return ClassificationOut(label=predicted, email=payload.text, test=pre_processed)

@@ -1,13 +1,9 @@
 import config
+
 from training import train_model
 from training import batch_inference
 from training import data_validation
-
 from prefect.deployments import Deployment
-from prefect.orion.schemas.schedules import (
-    CronSchedule,
-    IntervalSchedule,
-)
 
 data_validation_every_10_minutes = Deployment.build_from_flow(
     name="Data validation - Deployment",
@@ -40,6 +36,7 @@ inference_deployement_every_10_minutes = Deployment.build_from_flow(
 )
 
 if __name__ == '__main__':
+    config.init_folders()
     data_validation_every_10_minutes.apply()
     model_deployement_every_friday.apply()
     inference_deployement_every_10_minutes.apply()
