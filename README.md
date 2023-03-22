@@ -39,7 +39,7 @@ You can use Prefect to orchestrate the training pipeline. The Prefect server is 
 
 Navigate to deployement menu
 
-[![Deployement menu](./assets/deployments.png)](./assets/deployments.png)
+[![Deployement menu](./assets/deployments.jpg)](./assets/deployments.jpg)
 
 You can see the list of deployments, and run a new one. We reommend starting with the `DataValidation` deployment. This will first download the data, then validate it. If the validation fails, the deployment will stop.
 
@@ -47,7 +47,7 @@ You can see the list of deployments, and run a new one. We reommend starting wit
 
 We use MLflow to track the training of our models. The MLflow server is available at http://localhost:5000. Email spam  is the only experiments we have trained so far. You can see the list of runs, and the metrics and parameters associated with each run.
 
-[![MLflow tracking](./assets/mlflow.png)](./assets/mlflow.png)
+[![MLflow tracking](./assets/mlflow.jpg)](./assets/mlflow.jpg)
 
 ### Staging in production
 
