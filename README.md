@@ -29,7 +29,7 @@ These instructions will help you set up the development environment for Jupyter 
 ### Setting up the production environment
 
 1. Navigate to the `src` folder.
-2. Run `docker-compose up -d`. This will build the infrastructure and create two containers: `training` for running Prefect deployment orchestration and `mlflow` for the model registry.
+2. Run `docker-compose up --scale worker=5 -d`. This will build the infrastructure and create two containers: `training` for running Prefect deployment orchestration and `mlflow` for the model registry.
 3. Run `docker-compose down --volumes` to stop the containers and remove the volumes.
 
 
