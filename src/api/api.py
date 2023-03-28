@@ -75,7 +75,7 @@ def preprocess_text_base(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-@app.get("/latest/")
+@app.get("/latest")
 def latest_model():
   pipeline = mlflow.pyfunc.load_model(model_uri="models:/email_spam_model/Production")
   return {"health_check" : "OK","run_id": pipeline._model_meta.run_id}

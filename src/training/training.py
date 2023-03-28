@@ -31,6 +31,11 @@ def model_evaluation(y_true : np.ndarray, y_pred : np.ndarray) -> dict:
     return training.model_evaluation(y_true, y_pred)
 
 
+@flow(name="Data validation")
+def data_validation(checkpoint_name: str):
+    download_data()
+    run_checkpoint_validation(checkpoint_name=checkpoint_name)
+
 @flow(name='Model Training')
 def train_model(
     data_path: str, 
@@ -64,6 +69,8 @@ def train_model(
         'analyser': analyser,
         'stop_words': stop_words
     }
+
+    data_validation(checkpoint_name="email_checkpoint")
 
     with mlflow.start_run() as run:
         run_id = run.info.run_id
@@ -99,10 +106,6 @@ def train_model(
 
 
 
-@flow(name="Data validation")
-def data_validation(checkpoint_name: str):
-    download_data()
-    run_checkpoint_validation(checkpoint_name=checkpoint_name)
 
 
 mlflow.set_experiment(f'Email Spam')

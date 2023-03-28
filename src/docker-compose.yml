@@ -6,23 +6,39 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - models:/mlflow
+      - 5mlde:/mlflow
     depends_on:
       - mlflow
+      
   training:
       build: training
       ports:
         - "4200:4200"
       volumes:
-        - models:/mlflow
+        - 5mlde:/mlflow
+
   mlflow:
       build: mlflow
       ports:
         - "5000:5000"
       volumes:
-        - models:/mlflow
+        - 5mlde:/mlflow
       depends_on:
         - training
 
+  master:
+    image: locustio/locust
+    ports:
+     - "8089:8089"
+    volumes:
+      - ./performance:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --master -H http://api:8086
+  
+  worker:
+    image: locustio/locust
+    volumes:
+      - ./performance:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host master
+
 volumes:
-  models:
+  5mlde:
