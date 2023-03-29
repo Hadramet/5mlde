@@ -2,61 +2,93 @@
 
 This repo contains the group work done as part of the 5MLDE course at Supinfo School. It is about deploying machine learning models on different platforms.
 
-## Getting Started
+## Overview
 
-These instructions will help you set up the development environment for Jupyter and MLflow using Docker Compose.
+![project architecture](./assets/architecture.jpg)
+## Prerequisites
 
-### Prerequisites
-
-- Docker: Install Docker on your machine by following the instructions on the [Docker website](https://www.docker.com).
-- Docker Compose: Install Docker Compose by following the instructions on the [Docker Compose website](https://docs.docker.com/compose/install/).
-- Visual Studio Code: Install Visual Studio Code by following the instructions on the [Visual Studio Code website](https://code.visualstudio.com).
-- Remote - Containers extension: Install the "Remote - Containers" extension for Visual Studio Code from the [Visual Studio Code marketplace](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
-
-⛔ Do not run the both environments at the same time as they use the same ports.
-
-### Setting up the development environment
-
-1. Clone this repository: git clone https://github.com/hadramet/5mlde.git
-2. Open the project folder in Visual Studio Code.
-3. Click the "Reopen in Container" option in the bottom-left corner of the window. If you don't see the option, press `F1` and type "Remote-Containers: Reopen in Container" in the command palette. This will launch the Jupyter container using the Docker Compose configuration.
-4. Visual Studio Code will open a new window with the project folder mounted in the container.
-5. Run the script `python init_orion.py` and `python init_mlflow.py` each in a separate terminal to initialize the Orion Prefec and MLflow servers.
-6. Open the Jupyter notebook `SpamEmailDraft.ipynb` and run the cells to train the model and log it to MLflow.
+- Docker:  [Docker website](https://www.docker.com).
+- Docker Compose: [Docker Compose website](https://docs.docker.com/compose/install/).
+- Visual Studio Code (Dev): [Visual Studio Code website](https://code.visualstudio.com).
+- Remote - Containers extension (Dev):  [Visual Studio Code marketplace](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
 
 
+## How to run the project 
 
-### Setting up the production environment
+Make sure the Bash script (`start_stop_services.sh`) or the PowerShell script (`StartStopServices.ps1`) or (`Makefile`) is in the root folder of your project.
 
-1. Navigate to the `src` folder.
-2. Run `docker-compose up --scale worker=5 -d`. This will build the infrastructure and create two containers: `training` for running Prefect deployment orchestration and `mlflow` for the model registry.
-3. Run `docker-compose down --volumes` to stop the containers and remove the volumes.
+<details>
+    <summary><b>Using `make` (Recommended)</b></summary>
+    use git bash or bash shell command line
+    <p><pre> make start-services</pre></p>
+    <p><pre> make stop-services</pre></p>
+</details>
+<details>
+    <summary><b>For Linux/macOS users, run the Bash script</b></summary>
+    To start
+    <p><pre>chmod +x start_stop_services.sh && ./start_stop_services.sh start-services</pre></p>
+    <p><pre>./start_stop_services.sh stop-services</pre></p>
+</details>
+<details>
+    <summary><b>For Windows users, run the PowerShell script in PowerShell</b></summary>
+    To start
+    <p><pre>Set-ExecutionPolicy Bypass -Scope Process -Force</pre></p>
+    To stop
+    <p><pre>.\StartStopServices.ps1 start-services</pre></p>
+</details>
 
+### Accessing the services
 
-## Orchestrating the training pipeline
+- The web app is available at: [http://localhost:8501](http://localhost:8501).
+- The mlflow server is available at: [http://localhost:5000](http://localhost:5000).
+- The prometheus server is available at: [http://localhost:9090](http://localhost:9090).
+- The grafana server is available at: [http://localhost:3000](http://localhost:3000). The default username and password are `admin` and `admin`.
+- The prefect server is available at: [http://localhost:8080](http://localhost:8080).
+- The Locust server is available at: [http://localhost:8089](http://localhost:8089).
+- The API Swagger is available at: [http://localhost:8086/docs](http://localhost:8086/docs).
 
-You can use Prefect to orchestrate the training pipeline. The Prefect server is available at http://localhost:4200.
+### Create a model
 
-Navigate to deployement menu
+1. On the prefect server, you can run th ModelTraining deployment flow to create a model.
+2. You can then go to the mlflow server and check the model metrics.
+3. On prefect server, run the Best Model Training Deployment flow to deploy the best model. Choose the version of the model you want to stage and deploy.
+4. You can then go to the web app and test the model.
 
-[![Deployement menu](./assets/deployments.jpg)](./assets/deployments.jpg)
+### Run the performance test
 
-You can see the list of deployments, and run a new one. We reommend starting with the `DataValidation` deployment. This will first download the data, then validate it. If the validation fails, the deployment will stop.
+Go to the  locust address and run the performance test. You can change the number of users and the hatch rate.
 
-## Mlflow tracking
+### Monitoring
 
-We use MLflow to track the training of our models. The MLflow server is available at http://localhost:5000. Email spam  is the only experiments we have trained so far. You can see the list of runs, and the metrics and parameters associated with each run.
+You can go to the prometheus server and check the metrics. You can also go to the grafana server and check the dashboards.
 
-[![MLflow tracking](./assets/mlflow.jpg)](./assets/mlflow.jpg)
+## Project structure
 
-### Staging in production
+- `lab`: contains the lab work done during the course.
+- `src` : contains the source code of the final project.
 
-TODO
+### Source code
+In the `src` folder, you will find the following folders:
 
-For both environments, you can access the prefec UI at http://localhost:4200 and the mlflow UI at http://localhost:5000.
+- `api`: contains the code of the API.
+- `app`: contains the code of the web app.
+- `mlflow`: contains the dockerfile to build the mlflow server.
+- `monitoring`: contains the prometheus and grafana configuration files.
+- `perfomance`: contains the code of the performance test.
+- `training`: contains the code of the training pipeline.
+
+### Lab
+
+If you want to run the lab work. You can reopen the project in a container and run the `SpamEmailDraft.ipynb` notebook. And for the mlflow and prefect server, you can run the following commands:
+
+```bash
+pyhon init_mlflow.py
+python init_orion.py
+```
 
 
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
