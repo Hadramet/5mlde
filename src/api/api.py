@@ -88,10 +88,12 @@ def latest_model():
 @app.post("/classify", response_model=ClassificationOut, status_code=201)
 def classify(payload: InputData):
   print("Classification request received")
+  print("Payload received is : ",payload)
   pipeline = mlflow.pyfunc.load_model(model_uri="models:/email_spam_model/Production")
   email_content = pd.Series(payload.text)
   payload_df = pd.DataFrame({'text': email_content})
   pre_processed = preprocess_text_base(payload_df)
   predicted = pipeline.predict(pre_processed)
   print("Classification request processed")
+  print("Predicted value is : ",predicted)
   return ClassificationOut(label=predicted, email=payload.text, test=pre_processed)

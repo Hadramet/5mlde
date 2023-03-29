@@ -1,6 +1,10 @@
 version: "3.9"
 name: "5mlde-v1"
 services:
+  app:
+    build: app
+    ports:
+      - 8501:8501
   api:
     build: api
     ports:
