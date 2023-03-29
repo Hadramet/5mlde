@@ -4,3 +4,4 @@ pandas
 mlflow
 nltk
 textblob
+prometheus_fastapi_instrumentator

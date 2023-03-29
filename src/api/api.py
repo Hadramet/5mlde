@@ -7,6 +7,7 @@ from typing import Optional,Any
 from textblob import Word
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
+from prometheus_fastapi_instrumentator import Instrumentator
 import pandas as pd
 
 nltk.download('stopwords')
@@ -16,6 +17,8 @@ app = FastAPI(title="Email Spam Classifier",
               description="Email Spam Classifier API using MLFlow and FastAPI \
                 to serve the model as a REST API endpoint for inference purposes only.",
               version="0.0.1")
+
+Instrumentator().instrument(app).expose(app)
 
 class InputData(BaseModel):
   text: str
@@ -75,16 +78,20 @@ def preprocess_text_base(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-@app.get("/latest/")
+@app.get("/latest")
 def latest_model():
+  print("Health Check request received")
   pipeline = mlflow.pyfunc.load_model(model_uri="models:/email_spam_model/Production")
+  print("Health Check request processed")
   return {"health_check" : "OK","run_id": pipeline._model_meta.run_id}
 
 @app.post("/classify", response_model=ClassificationOut, status_code=201)
 def classify(payload: InputData):
+  print("Classification request received")
   pipeline = mlflow.pyfunc.load_model(model_uri="models:/email_spam_model/Production")
   email_content = pd.Series(payload.text)
   payload_df = pd.DataFrame({'text': email_content})
   pre_processed = preprocess_text_base(payload_df)
   predicted = pipeline.predict(pre_processed)
+  print("Classification request processed")
   return ClassificationOut(label=predicted, email=payload.text, test=pre_processed)
