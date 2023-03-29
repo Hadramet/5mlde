@@ -2,7 +2,6 @@ import streamlit as st
 import requests
 import json
 
-# Define the email spam classification function
 def classify_email(email):
     payload = json.dumps({"text": email})
     headers = {'Content-Type': 'application/json'}
@@ -15,12 +14,30 @@ def classify_email(email):
     else:
         print(f"Error: {response.status_code}, {response.text}")
         return None, None
+    
 
-# Main app function
-def main():
+def check_api_health():
+    response = requests.get("http://api:8086/latest")
+    if response.status_code == 200 or response.status_code == 201:
+        data = response.json()
+        if data["health_check"] == "OK":
+            return True
+        else:
+            return False
+    else:
+        print(f"Error: {response.status_code}, {response.text}")
+        return False
+    
+
+
+def main():   
     st.set_page_config(page_title="Email Spam Classifier", page_icon=":email:", layout="wide")
+    
+    if check_api_health():
+        st.success("API is healthy")
+    else:
+        st.error("API is not healthy. Please check the API server.")
 
-    # UI elements
     st.title("Email Spam Classifier :email:")
     email_input = st.text_area("Enter the email content:")
     classify_button = st.button("Classify Email")
@@ -38,9 +55,8 @@ def main():
                         st.success("This email is not spam.")
                     
                     st.subheader("Preprocessed Email:")
-                    words = preprocessed_email.split()
-                    for word in words:
-                        st.markdown(f'<span style="background-color:#f0f0f0; border-radius: 5px; padding: 4px 6px; margin: 2px;">{word}</span>', unsafe_allow_html=True)
+                    for word in preprocessed_email.split():
+                        st.write(f"`{word}` ", end="")
                 else:
                     st.error("Error: Unable to classify the email. Please try again later.")
 

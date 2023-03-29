@@ -16,6 +16,7 @@ from prefect_great_expectations import run_checkpoint_validation
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
+from mlflow.tracking import MlflowClient
 
 
 @task(name='model_training', tags=['model'])
@@ -71,10 +72,10 @@ def train_model(
     }
 
     data_validation(checkpoint_name="email_checkpoint")
-
+    mlflow.autolog()
     with mlflow.start_run() as run:
         run_id = run.info.run_id
-        mlflow.set_tag("Level", "Development")
+        # mlflow.set_tag("Level", "Development")
 
         extract_data = preprocess_data(data_path, True)
 
@@ -84,26 +85,40 @@ def train_model(
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        mlflow.log_param("train_set_size", X_train.shape[0])
-        mlflow.log_param("test_set_size", X_test.shape[0])
+        # mlflow.log_param("train_set_size", X_train.shape[0])
+        # mlflow.log_param("test_set_size", X_test.shape[0])
 
         pipeline = model_training(X_train, y_train, **kwargs)
         y_pred =  model_predict(X_test, pipeline)
         results = model_evaluation(y_test, y_pred)
 
-        mlflow.log_metric("accuracy", results['accuracy'])
-        mlflow.log_metric("precision", results['precision'])
-        mlflow.log_metric("recall", results['recall'])
-        mlflow.log_metric("f1", results['f1'])
+        # mlflow.log_metric("accuracy", results['accuracy'])
+        # mlflow.log_metric("precision", results['precision'])
+        # mlflow.log_metric("recall", results['recall'])
+        # mlflow.log_metric("f1", results['f1'])
 
         os.makedirs(local_storage, exist_ok=True)
         os.makedirs(config.MODEL_FOLDER, exist_ok=True)
 
-        mlflow.sklearn.log_model(pipeline, "models")
-        mlflow.register_model(f"runs:/{run_id}/models", "email_spam_model")
+        mlflow.sklearn.log_model(
+            sk_model=pipeline, 
+            artifact_path="models" , 
+            registered_model_name="email_spam_model"
+        )
+        # mlflow.register_model(f"runs:/{run_id}/models", "email_spam_model")
+
         if save_model:  task_save_pickle(config.MODEL_PATH, pipeline)
         return results
 
+
+@flow(name='Best Model Staging')
+def stage_latest_best_model(version: int, model_name: str, stage: str = "Staging"):
+    client = MlflowClient()
+    client.transition_model_version_stage(
+        name=model_name,
+        version=version,
+        stage=stage,
+    )
 
 
 
@@ -113,3 +128,4 @@ mlflow.set_experiment(f'Email Spam')
 if __name__ == '__main__':
     data_validation("email_checkpoint")
     train_model(config.DATA_PATH)
+    stage_latest_best_model(1, "email_spam_model")

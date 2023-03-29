@@ -16,7 +16,7 @@ nltk.download('wordnet')
 app = FastAPI(title="Email Spam Classifier",
               description="Email Spam Classifier API using MLFlow and FastAPI \
                 to serve the model as a REST API endpoint for inference purposes only.",
-              version="0.0.1")
+              version="1.0.0")
 
 Instrumentator().instrument(app).expose(app)
 
@@ -27,35 +27,6 @@ class ClassificationOut(BaseModel):
   label: int # 0=No-Spam , 1=Spam
   email: str 
   test : Any
-
-
-def extact_features(processed_text: str, tv_dict: Optional[dict] = {}) -> dict:
-    """
-    Takes a processed text
-    outputs a dictionary with the extracted features.
-    """
-    max_features = 1000
-    lowercase = True
-    analyzer = 'word'
-    stop_words = 'english'
-    ngram_range = (1, 1)
-
-    tv = None
-    if tv_dict :
-        tv = tv = tv_dict["vectorizer"]
-    else:
-        print("Hi")
-        tv = TfidfVectorizer(
-          max_features=max_features,
-          lowercase=lowercase,
-          analyzer=analyzer,
-          stop_words=stop_words,
-          ngram_range=ngram_range
-        )
-        tv.fit([processed_text])
-    features = tv.transform([processed_text])
-    
-    return {"features" : features , "processed_text" : processed_text}
 
 def preprocess_text_base(df: pd.DataFrame) -> pd.DataFrame:
     """
