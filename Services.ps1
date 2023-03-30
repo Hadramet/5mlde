@@ -20,7 +20,10 @@ function Start-Services {
 
   Write-Host "Starting services with $workers worker(s)..."
   Set-Location src
-  docker-compose up --scale worker=$workers -d
+  docker-compose up --scale worker=$workers -d --build 
+  Write-Host "Waiting for services to start..."
+  Start-Sleep -s 30
+  Write-Host "Services started successfully."
 }
 
 function Stop-Services {
@@ -31,10 +34,22 @@ function Stop-Services {
   docker-compose down --volumes
 }
 
+function Build{
+  Check-Dependencies
+
+  Write-Host "Building services..."
+  Set-Location src
+  docker-compose build
+}
+
 if ($args[0] -eq "start-services") {
   Start-Services
 } elseif ($args[0] -eq "stop-services") {
   Stop-Services
-} else {
+}
+elseif ($args[0] -eq "build") {
+  Build
+} 
+else {
   Write-Host "Usage: .\$($MyInvocation.MyCommand.Name) <start-services|stop-services>"
 }

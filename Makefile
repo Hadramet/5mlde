@@ -18,8 +18,17 @@ start-services: check-dependencies
 		workers=$(NUM_WORKERS); \
 	fi; \
 	echo "Starting services with $$workers worker(s)..."; \
-	cd src && docker-compose up --scale worker=$$workers -d
+	cd src && docker-compose up --scale worker=$$workers -d --build ; \
+	echo "Waiting for services to start..."; \
+	sleep 30; \
+	echo "Services started successfully."
+
+	
 
 stop-services: check-dependencies
 	@echo "Stopping services and removing volumes..."
 	@cd src && docker-compose down --volumes
+
+build:
+	@echo "Building the Docker image..."
+	@cd src && docker-compose build
