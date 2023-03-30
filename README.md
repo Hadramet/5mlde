@@ -30,7 +30,6 @@ Make sure the Bash script (`services.sh`) or the PowerShell script (`Services.ps
     To start
     <p><pre>chmod +x services.sh</pre></p>
     <p><pre>./services.sh start-services</pre></p>
-    
     To stop
     <p><pre>./services.sh stop-services</pre></p>
 </details>
