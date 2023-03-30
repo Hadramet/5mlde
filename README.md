@@ -15,7 +15,7 @@ This repo contains the group work done as part of the 5MLDE course at Supinfo Sc
 
 ## How to run the project 
 
-Make sure the Bash script (`start_stop_services.sh`) or the PowerShell script (`StartStopServices.ps1`) or (`Makefile`) is in the root folder of your project.
+Make sure the Bash script (`services.sh`) or the PowerShell script (`Services.ps1`) or (`Makefile`) is in the root folder of your project.
 
 <details>
     <summary><b>Using `make` (Recommended)</b></summary>
@@ -26,15 +26,15 @@ Make sure the Bash script (`start_stop_services.sh`) or the PowerShell script (`
 <details>
     <summary><b>For Linux/macOS users, run the Bash script</b></summary>
     To start
-    <p><pre>chmod +x start_stop_services.sh && ./start_stop_services.sh start-services</pre></p>
-    <p><pre>./start_stop_services.sh stop-services</pre></p>
+    <p><pre>chmod +x services.sh && ./services.sh start-services</pre></p>
+    <p><pre>./services.sh stop-services</pre></p>
 </details>
 <details>
     <summary><b>For Windows users, run the PowerShell script in PowerShell</b></summary>
     To start
     <p><pre>Set-ExecutionPolicy Bypass -Scope Process -Force</pre></p>
     To stop
-    <p><pre>.\StartStopServices.ps1 start-services</pre></p>
+    <p><pre>.\Services.ps1 start-services</pre></p>
 </details>
 
 ### Accessing the services
