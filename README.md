@@ -20,21 +20,28 @@ Make sure the Bash script (`services.sh`) or the PowerShell script (`Services.ps
 <details>
     <summary><b>Using `make` (Recommended)</b></summary>
     use git bash or bash shell command line
+    to start
     <p><pre> make start-services</pre></p>
+    To stop
     <p><pre> make stop-services</pre></p>
 </details>
 <details>
     <summary><b>For Linux/macOS users, run the Bash script</b></summary>
     To start
-    <p><pre>chmod +x services.sh && ./services.sh start-services</pre></p>
+    <p><pre>chmod +x services.sh</pre></p>
+    <p><pre>./services.sh start-services</pre></p>
+    
+    To stop
     <p><pre>./services.sh stop-services</pre></p>
 </details>
 <details>
     <summary><b>For Windows users, run the PowerShell script in PowerShell</b></summary>
     To start
     <p><pre>Set-ExecutionPolicy Bypass -Scope Process -Force</pre></p>
-    To stop
     <p><pre>.\Services.ps1 start-services</pre></p>
+    
+    To stop
+    <p><pre>.\Services.ps1 stop-services</pre></p>
 </details>
 
 ### Accessing the services
