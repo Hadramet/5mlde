@@ -38,7 +38,6 @@ Make sure the Bash script (`services.sh`) or the PowerShell script (`Services.ps
     To start
     <p><pre>Set-ExecutionPolicy Bypass -Scope Process -Force</pre></p>
     <p><pre>.\Services.ps1 start-services</pre></p>
-    
     To stop
     <p><pre>.\Services.ps1 stop-services</pre></p>
 </details>
