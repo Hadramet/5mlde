@@ -85,17 +85,9 @@ def train_model(
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        # mlflow.log_param("train_set_size", X_train.shape[0])
-        # mlflow.log_param("test_set_size", X_test.shape[0])
-
         pipeline = model_training(X_train, y_train, **kwargs)
         y_pred =  model_predict(X_test, pipeline)
         results = model_evaluation(y_test, y_pred)
-
-        # mlflow.log_metric("accuracy", results['accuracy'])
-        # mlflow.log_metric("precision", results['precision'])
-        # mlflow.log_metric("recall", results['recall'])
-        # mlflow.log_metric("f1", results['f1'])
 
         os.makedirs(local_storage, exist_ok=True)
         os.makedirs(config.MODEL_FOLDER, exist_ok=True)
@@ -105,8 +97,7 @@ def train_model(
             artifact_path="models" , 
             registered_model_name="email_spam_model"
         )
-        # mlflow.register_model(f"runs:/{run_id}/models", "email_spam_model")
-
+        
         if save_model:  task_save_pickle(config.MODEL_PATH, pipeline)
         return results
 
