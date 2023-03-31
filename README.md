@@ -48,7 +48,7 @@ Make sure the Bash script (`services.sh`) or the PowerShell script (`Services.ps
 - The mlflow server is available at: [http://localhost:5000](http://localhost:5000).
 - The prometheus server is available at: [http://localhost:9090](http://localhost:9090).
 - The grafana server is available at: [http://localhost:3000](http://localhost:3000). The default username and password are `admin` and `admin`.
-- The prefect server is available at: [http://localhost:4200](http://localhost:8080).
+- The prefect server is available at: [http://localhost:4200](http://localhost:4200).
 - The Locust server is available at: [http://localhost:8089](http://localhost:8089).
 - The API Swagger is available at: [http://localhost:8086/docs](http://localhost:8086/docs).
 
